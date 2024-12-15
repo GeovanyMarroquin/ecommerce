@@ -3,6 +3,7 @@ FROM php:8.2-fpm
 # Instalar dependencias necesarias, incluyendo Node.js 22
 RUN apt-get update && apt-get install -y \
     curl \
+    nano \
     git \
     zip \
     unzip \
@@ -31,6 +32,8 @@ RUN mkdir -p /var/www/html/storage /var/www/html/bootstrap/cache
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage \
     && chmod -R 755 /var/www/html/bootstrap/cache
+
+RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini
 
 # Exponer puertos para PHP y Vite
 EXPOSE 8000 5173
