@@ -1,0 +1,45 @@
+
+services:
+    app:
+        build:
+            context: ./docker/php
+        container_name: laravel_app
+        ports:
+            - "8000:8000" # Puerto para Laravel
+            - "5173:5173" # Puerto para Vite
+        volumes:
+            - ./:/var/www/html
+        networks:
+            - laravel_network
+        environment:
+            - APP_ENV=local
+            - APP_DEBUG=true
+            - APP_KEY
+            - DB_HOST=db
+            - DB_PORT=3306
+            - DB_DATABASE=laravel
+            - DB_USERNAME=root
+            - DB_PASSWORD=root
+
+    db:
+        image: mariadb:10.9
+        container_name: mariadb_db
+        restart: always
+        ports:
+            - "3306:3306"
+        environment:
+            MARIADB_ROOT_PASSWORD: root
+            MARIADB_DATABASE: laravel
+            MARIADB_USER: root
+            MARIADB_PASSWORD: root
+        volumes:
+            - db_data:/var/lib/mysql
+        networks:
+            - laravel_network
+
+networks:
+    laravel_network:
+        driver: bridge
+
+volumes:
+    db_data:
