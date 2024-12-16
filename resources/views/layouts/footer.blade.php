@@ -4,8 +4,8 @@
             <p>{{now()->format("Y")}} &copy; {{config("app.name")}}</p>
         </div>
         <div class="float-end">
-            <p>Crafted with <span class="text-danger"><i class="bi bi-heart"></i></span> by <a
-                    href="http://ahmadsaugi.com">A. Saugi</a></p>
+            <p>Created <span class="text-danger"><i class="bi bi-heart"></i></span> by <a
+                    href="https://google.com">SoftEren</a></p>
         </div>
     </div>
 </footer>
