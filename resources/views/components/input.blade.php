@@ -1,0 +1,1 @@
+<input {{ $attributes->has("disabled") ? 'disabled' : '' }} {!! $attributes->merge(['class' => 'form-control']) !!}>
