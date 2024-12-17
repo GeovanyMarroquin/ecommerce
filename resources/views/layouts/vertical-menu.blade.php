@@ -20,6 +20,12 @@
                         <span>Dashboard</span>
                     </a>
                 </li>
+                <li class="sidebar-item">
+                    <a href="{{route("users.index")}}" class='sidebar-link'>
+                        <i class="bi bi-people-fill"></i>
+                        <span>Usuarios</span>
+                    </a>
+                </li>
                 {{-- Multiple menu --}}
                 {{--<li class="sidebar-item active has-sub">
                     <a href="#" class='sidebar-link'>

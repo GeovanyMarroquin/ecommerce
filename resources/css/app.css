@@ -6,5 +6,7 @@
 @import "../admin-template/vendors/perfect-scrollbar/perfect-scrollbar.css";
 @import "../admin-template/vendors/bootstrap-icons/bootstrap-icons.css";
 @import "../admin-template/css/app.css";
+@import "gridjs/dist/theme/mermaid.css";
+
 /*@import "../admin-template/vendors/iconly/bold.css";*/
 

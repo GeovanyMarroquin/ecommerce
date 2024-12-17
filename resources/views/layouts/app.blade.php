@@ -15,6 +15,7 @@
     <link rel="shortcut icon" href="{{asset("assets/images/icon.svg")}}" type="image/x-icon">
 
     <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
@@ -27,8 +28,8 @@
             @yield('content')
             @include("layouts.footer")
         </div>
-
     </div>
 </div>
+@yield("customJs")
 </body>
 </html>
