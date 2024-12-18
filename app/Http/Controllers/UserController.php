@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rules\Password;
 
 class UserController extends Controller
 {
@@ -26,20 +27,26 @@ class UserController extends Controller
 
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'fullName' => ['required', 'max:100', "string"],
+            'password' => [Password::min(8), Password::required()],
+            "email" => ["email", "required", "unique:users,email"],
+        ]);
+
+        $user = new User([
+            "name" => $validatedData["fullName"],
+            "password" => bcrypt($validatedData["password"]),
+            "email" => $validatedData["email"],
+        ]);
+        $user->save();
+
+        return response()->json([
+            "data" => $this->listAllUsers(),
+            "message" => "Guardado exitosamente",
+        ]);
     }
 
     /**

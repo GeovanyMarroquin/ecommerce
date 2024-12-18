@@ -25,7 +25,10 @@
              modalTitle="Agregar nuevo usuario"
              cancelButtonText="Cancelar"
              acceptButtonText="Guardar"
+             acceptButtonId="btnAggNewUser"
     >
+        <x-input type="hidden" id="userId"></x-input>
+
         <div class="mb-3">
             <x-label value="Nombre" for="fullName"></x-label>
             <x-input type="text" id="fullName"></x-input>
@@ -33,6 +36,10 @@
         <div class="mb-3">
             <x-label value="Correo electronico" for="email"></x-label>
             <x-input type="email" id="email"></x-input>
+        </div>
+        <div class="mb-3">
+            <x-label value="Contraseña" for="password"></x-label>
+            <x-input type="password" id="password"></x-input>
         </div>
     </x-modal>
 @endsection

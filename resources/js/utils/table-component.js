@@ -1,9 +1,10 @@
-import { Grid } from "gridjs";
+import {Grid} from "gridjs";
 
 
 class TableComponent {
     columns = [];
     data = [];
+    gridElement;
     tableElement = document.createElement("table");
     default = {
         pagination: {
@@ -29,24 +30,53 @@ class TableComponent {
         },
     }
 
-    constructor(tableId, columns, data) {
-        this.data = data;
+    constructor(tableId, columns) {
         this.columns = columns;
         this.tableElement = document.getElementById(tableId);
-
-        this.init();
     }
 
+    setData(data) {
+        this.data = data;
+    }
+
+
     init() {
-        return new Grid({
+        this.gridElement = new Grid({
             ...this.default,
             columns: this.columns,
             data: this.data,
-        }).render(this.tableElement);
+        });
+        this.gridElement.render(this.tableElement);
+
+        return this.gridElement;
+    }
+
+    update() {
+        this.gridElement = this.gridElement.updateConfig({
+            ...this.default,
+            columns: this.columns,
+            data: this.data,
+        });
+        this.gridElement.forceRender();
+
+        return this.gridElement;
     }
 
     getTableElement() {
         return this.tableElement;
+    }
+
+    addRowEvent(event, handler) {
+        if (!this.tableElement) {
+            throw new Error("Table element is not initialized.");
+        }
+
+        this.tableElement.addEventListener(event, (e) => {
+            const row = e.target.closest("tr");
+            if (row) {
+                handler(e, row);
+            }
+        });
     }
 }
 

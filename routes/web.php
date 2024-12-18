@@ -17,6 +17,7 @@ Route::middleware(['auth:web'])->prefix("admin")->group(function () {
         Route::get("/", [UserController::class, "index"])->name("index");
         Route::get("listAllUsers", [UserController::class, "listAllUsers"])->name("listAllUsers");
         Route::get("edit/{user}", [UserController::class, "edit"])->name("edit");
+        Route::post("store", [UserController::class, "store"])->name("store");
     });
 
     // Ruta Categorias
