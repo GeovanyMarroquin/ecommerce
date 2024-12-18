@@ -3,7 +3,7 @@
         <div class="sidebar-header">
             <div class="d-flex justify-content-between">
                 <div class="logo">
-                    <a href="{{route("home")}}"><img src="{{asset("assets/images/logo.png")}}" alt="Logo" srcset=""></a>
+                    <a href="{{route("home")}}"><img src="{{asset("assets/images/logo.svg")}}" width="100" alt="Logo" srcset=""></a>
                 </div>
                 <div class="toggler">
                     <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
@@ -24,6 +24,18 @@
                     <a href="{{route("users.index")}}" class='sidebar-link'>
                         <i class="bi bi-people-fill"></i>
                         <span>Usuarios</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="{{"#"}}" class='sidebar-link'>
+                        <i class="bi bi-tag"></i>
+                        <span>Categorias</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="{{"#"}}" class='sidebar-link'>
+                        <i class="bi bi-bag"></i>
+                        <span>Productos</span>
                     </a>
                 </li>
                 {{-- Multiple menu --}}
