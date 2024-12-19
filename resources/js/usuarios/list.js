@@ -115,7 +115,6 @@ const saveOrUpdateUser = async () => {
         requestData.dbId = inputUserId.value;
         const r = await actualizarUsuario(requestData);
         data = r.data;
-        console.log({data, anal: 2})
     } else {
         const r = await guardarNuevoUsuario(requestData);
         data = r.data;
