@@ -13,7 +13,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return view("users.list", ["users" => User::all()]);
+        return view("users.list");
     }
 
     public function listAllUsers()
@@ -70,7 +70,30 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //
+        $validation = [
+            'fullName' => ['required', 'max:100', "string"],
+            "email" => ["email", "required"],
+        ];
+        if ($request->input("password")) {
+            $validation["password"] = [Password::min(8), Password::required()];
+        }
+
+        $validatedData = $request->validate($validation);
+
+        $fillable = [
+            "name" => $validatedData["fullName"],
+            "email" => $validatedData["email"],
+        ];
+        if ($request->input("password")) {
+            $fillable["password"] = bcrypt($request->input("password"));
+        }
+        $user->fill($fillable);
+        $user->save();
+
+        return response()->json([
+            "data" => $this->listAllUsers(),
+            "message" => "Editado exitosamente",
+        ]);
     }
 
     /**
@@ -78,6 +101,10 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        $user->delete();
+        return response()->json([
+            "data" => $this->listAllUsers(),
+            "message" => "Eliminado exitosamente",
+        ]);
     }
 }

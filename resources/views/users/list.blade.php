@@ -22,7 +22,7 @@
 
 @section("modals")
     <x-modal modalId="modalAggNewUser"
-             modalTitle="Agregar nuevo usuario"
+             modalTitle="Agregar o actualizar usuario"
              cancelButtonText="Cancelar"
              acceptButtonText="Guardar"
              acceptButtonId="btnAggNewUser"

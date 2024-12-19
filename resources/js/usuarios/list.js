@@ -1,7 +1,14 @@
 import TableComponent from "../utils/table-component.js";
-import {obtenerUsuarios, guardarNuevoUsuario, obtenerUsuarioPorId} from "./user-service.js";
+import {
+    obtenerUsuarios,
+    guardarNuevoUsuario,
+    obtenerUsuarioPorId,
+    actualizarUsuario,
+    destroyUsuario
+} from "./user-service.js";
 import {html} from "gridjs";
 import {Modal} from "bootstrap";
+import AlertManager from "../utils/AlertManager.js";
 
 const columnsUsersAll = [
     {id: "id", name: "Id"},
@@ -11,11 +18,16 @@ const columnsUsersAll = [
         name: "Acciones",
         formatter: (cell, row) => {
             return html(`
-                <a type="button" class="btn btn-warning editUser" 
+                <a type="button" class="btn btn-warning editUser"
                     data-dbid="${row.cells[0].data}"
                     data-href="${row.cells[3].data}">
                     <i class="bi bi-pencil"></i>
                     Editar
+                </a>
+                <a type="button" class="btn btn-danger deleteUser"
+                    data-dbid="${row.cells[0].data}">
+                    <i class="bi bi-trash3"></i>
+                    Eliminar
                 </a>
             `);
         },
@@ -36,7 +48,9 @@ const inputPassword = document.querySelector("#password");
 export async function init() {
     // aca es necesario agregar todos los eventos de los inputs
     // se puede modularizar en diferentes archivos
+    AlertManager.loading();
     const users = await obtenerUsuarios();
+    AlertManager.closeLoading();
     const frm = users.map(x => Object.keys(x).map(y => x[y]));
     tableUsersInstance.setData(frm);
     tableUsersInstance.init();
@@ -49,6 +63,10 @@ export async function init() {
             inputUserId.value = dbId;
             editarUsuario(dbId);
         }
+        if (e.target.classList.contains("deleteUser")) {
+            const dbId = e.target.getAttribute("data-dbid");
+            eliminarUsuario(dbId);
+        }
     });
 
     btnAddUser.addEventListener("click", () => {
@@ -56,68 +74,91 @@ export async function init() {
     });
 
     btnAggNewUser.addEventListener("click", () => {
-        saveNewUser();
+        saveOrUpdateUser();
     })
 }
 
 const editarUsuario = async (id) => {
+    AlertManager.loading();
     const user = await obtenerUsuarioPorId(id);
+    AlertManager.closeLoading();
     inputFullName.value = user.name;
     inputEmail.value = user.email;
-    inputPassword.value = user.password;
+    inputPassword.value = "";
+    inputEmail.setAttribute("disabled", "disabled");
     modalUser.show();
 }
 
 const addNewUser = () => {
+    inputEmail.removeAttribute("disabled");
     modalUser.show();
 }
 
-const saveNewUser = async () => {
+const saveOrUpdateUser = async () => {
+    if (!validateFormUser()) {
+        AlertManager.warning("Ingrese los datos obligatorios");
+        return;
+    }
     const fullName = inputFullName.value;
     const email = inputEmail.value;
     const password = inputPassword.value;
 
-    if (!(fullName && email && password)) {
-        alert("Ingrese los datos obligatorios");
-        return;
-    }
-
-    const data = {
+    const requestData = {
         fullName,
         email,
         password,
+    };
+    let data;
+    AlertManager.loading();
+
+    if (!!inputUserId.value) {
+        requestData.dbId = inputUserId.value;
+        const r = await actualizarUsuario(requestData);
+        data = r.data;
+        console.log({data, anal: 2})
+    } else {
+        const r = await guardarNuevoUsuario(requestData);
+        data = r.data;
     }
 
-    const response = await guardarNuevoUsuario(data);
+    AlertManager.closeLoading();
 
-    tableUsersInstance.setData(response.data);
+    tableUsersInstance.setData(data);
     tableUsersInstance.update();
 
-    alert(response.message);
+    AlertManager.success("Usuario agregado correctamente");
     modalUser.hide();
+
+    inputFullName.value = "";
+    inputEmail.value = "";
+    inputPassword.value = "";
+    inputUserId.value = "";
 }
 
-const editUser = async () => {
-    const fullName = document.querySelector("#fullName").value || "";
-    const email = document.querySelector("#email").value || "";
-    const password = document.querySelector("#password").value || "";
+const validateFormUser = () => {
+    const fullName = !!inputFullName.value;
+    const email = !!inputEmail.value;
+    const password = !!inputPassword.value;
+    const userId = !!inputUserId.value;
 
-    if (!(fullName && email && password)) {
-        alert("Ingrese los datos obligatorios");
-        return;
-    }
+    return userId
+        ? fullName && email
+        : fullName && email && password;
+}
 
-    const data = {
-        fullName,
-        email,
-        password,
-    }
+const eliminarUsuario = async (id) => {
 
-    const response = await guardarNuevoUsuario(data);
+    const {value} = await AlertManager.question("Estas seguro?", "Esta accion no se podra revertir");
 
-    tableUsersInstance.setData(response.data);
+    if(!value) return false;
+
+    AlertManager.loading();
+    const resp = await destroyUsuario(id);
+    AlertManager.closeLoading();
+
+    const data = resp.data;
+
+    tableUsersInstance.setData(data);
     tableUsersInstance.update();
-
-    alert(response.message);
-    modalUser.hide();
 }
+

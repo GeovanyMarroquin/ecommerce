@@ -18,6 +18,8 @@ Route::middleware(['auth:web'])->prefix("admin")->group(function () {
         Route::get("listAllUsers", [UserController::class, "listAllUsers"])->name("listAllUsers");
         Route::get("edit/{user}", [UserController::class, "edit"])->name("edit");
         Route::post("store", [UserController::class, "store"])->name("store");
+        Route::put("update/{user}", [UserController::class, "update"])->name("update");
+        Route::delete("destroy/{user}", [UserController::class, "destroy"])->name("destroy");
     });
 
     // Ruta Categorias
